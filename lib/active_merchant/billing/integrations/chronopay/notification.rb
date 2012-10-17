@@ -3,6 +3,8 @@ module ActiveMerchant #:nodoc:
     module Integrations #:nodoc:
       module Chronopay
         class Notification < ActiveMerchant::Billing::Integrations::Notification
+          include Common
+
           def complete?
             status == 'Completed'
           end
@@ -16,12 +18,12 @@ module ActiveMerchant #:nodoc:
           # <tt>expire – customer’s access to restricted zone membership has been expired;</tt>::
           # <tt>refund – request to refund has been received;</tt>::
           # <tt>chargeback – request to chargeback has been received.</tt>::
-          # 
+          #
           # This implementation of Chronopay does not support subscriptions.
           # The status codes used are matched to the status codes that Paypal
           # sends.  See Paypal::Notification#status for more details
           def status
-            case params['transaction_type']
+            case transaction_type
             when 'onetime'
               'Completed'
             when 'refund'
@@ -38,13 +40,18 @@ module ActiveMerchant #:nodoc:
             params['transaction_id']
           end
 
+          # Type of transaction
+          def transaction_type
+            params['transaction_type']
+          end
+
           # Unique ID of customer
           def customer_id
             params['customer_id']
           end
 
           # Unique ID of Merchant’s web-site
-          def site_id 
+          def site_id
             params['site_id']
           end
 
@@ -65,7 +72,7 @@ module ActiveMerchant #:nodoc:
           end
 
           # Date of transaction in MM/DD/YYYY format
-          def date 
+          def date
             params['date']
           end
 
@@ -94,7 +101,7 @@ module ActiveMerchant #:nodoc:
             params['country']
           end
 
-          # The customer's city     
+          # The customer's city
           def city
             params['city']
           end
@@ -121,6 +128,10 @@ module ActiveMerchant #:nodoc:
 
           # The item id passed in the first custom parameter
           def item_id
+            params['order_id']
+          end
+
+          def custom1
             params['cs1']
           end
 
@@ -144,12 +155,24 @@ module ActiveMerchant #:nodoc:
             params['total']
           end
 
+          def security_key
+            params['sign']
+          end
+
           def test?
             date.blank? && time.blank? && transaction_id.blank?
           end
 
           def acknowledge
-            true
+            security_key == generate_signature
+          end
+
+          def secret
+            @options[:secret]
+          end
+
+          def generate_signature_string
+            [secret, customer_id, transaction_id, transaction_type, gross].join
           end
         end
       end
