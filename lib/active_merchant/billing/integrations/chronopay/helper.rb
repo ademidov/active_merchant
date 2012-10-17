@@ -35,9 +35,9 @@ module ActiveMerchant #:nodoc:
           self.country_format = :alpha3
 
           def initialize(order, account, options = {})
-            super
             @secret = options.delete(:secret)
             add_field 'cb_type', 'p'
+            super
           end
 
           def generate_signature_string
