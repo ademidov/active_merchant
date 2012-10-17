@@ -36,8 +36,8 @@ module ActiveMerchant #:nodoc:
 
           def initialize(order, account, options = {})
             @secret = options.delete(:secret)
-            add_field 'cb_type', 'p'
             super
+            add_field 'cb_type', 'p'
           end
 
           def generate_signature_string
