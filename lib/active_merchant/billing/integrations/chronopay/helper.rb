@@ -71,7 +71,7 @@ module ActiveMerchant #:nodoc:
           mapping :account, 'product_id'
           mapping :amount,   'product_price'
 
-          mapping :order, 'order_id'
+          mapping :order, 'cs1'
 
           mapping :notify_url, 'cb_url'
           mapping :return_url, 'success_url'

@@ -128,10 +128,6 @@ module ActiveMerchant #:nodoc:
 
           # The item id passed in the first custom parameter
           def item_id
-            params['order_id']
-          end
-
-          def custom1
             params['cs1']
           end
 
