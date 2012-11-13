@@ -6,33 +6,11 @@ module ActiveMerchant #:nodoc:
           include Common
 
           def complete?
-            status == 'Completed'
+            true
           end
 
-          # Status of transaction. List of possible values:
-          # <tt>onetime – one time payment has been made, no repayment required;</tt>::
-          # <tt>initial – first payment has been made, repayment required in corresponding period;</tt>::
-          # <tt>decline – charge request has been rejected;</tt>::
-          # <tt>rebill – repayment has been made together with initial transaction;</ttt>::
-          # <tt>cancel – repayments has been disabled;</tt>::
-          # <tt>expire – customer’s access to restricted zone membership has been expired;</tt>::
-          # <tt>refund – request to refund has been received;</tt>::
-          # <tt>chargeback – request to chargeback has been received.</tt>::
-          #
-          # This implementation of Chronopay does not support subscriptions.
-          # The status codes used are matched to the status codes that Paypal
-          # sends.  See Paypal::Notification#status for more details
           def status
-            case transaction_type
-            when 'onetime'
-              'Completed'
-            when 'refund'
-              'Refunded'
-            when 'chargeback'
-              'Reversed'
-            else
-              'Failed'
-            end
+            'Completed'
           end
 
           # Unique ID of transaction
